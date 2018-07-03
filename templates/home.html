@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+   <body>
+
+      <h1>Hello {{ name }}!</h1>
+      <form action="{{ url_for('viewcrime') }}" method = 'POST'>
+        <label for="keyword" class ="keyword">What are you looking for?</label>
+        <input type= 'text' name='keyword' placeholder='Enter time' id = 'keyword'>
+        <input type= 'text' name='location' placeholder='Enter postcode' id = 'location'>
+        <button id="submit_button">View Crimes</button>
+      </form>
+   </body>
+</html>

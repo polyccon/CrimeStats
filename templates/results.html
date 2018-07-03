@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+   <body>
+
+      <h1>Results</h1>
+      {% for result in results.keys() %}
+      <div>{{result}} : {{results[result]}}</div>
+      {% endfor %}
+      <form action="/home">
+        <input type="submit" value="Home page" />
+      </form>
+
+
+   </body>
+</html>
