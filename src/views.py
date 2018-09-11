@@ -1,12 +1,12 @@
-#!/usr/bin/env python3
-import requests, json
-from flask import Flask, jsonify, request, abort, make_response, render_template
-from flask import g
-from datetime import datetime
+import json
+import requests
+from flask import jsonify, request, abort, make_response, render_template
+
 import googlemaps
 
+from src.core import app
+from readfile import read_json
 
-app = Flask(__name__)
 
 def _parse_request_body():
     """Extract data type from request body."""
@@ -24,21 +24,24 @@ def _parse_request_body():
         abort(make_response(jsonify(response_body), 400))
     return id_, items
 
+
 @app.route('/healthz', methods=['GET'])
 def healthz():
     return ('', 200)
+
 
 @app.route("/")
 def hello():
     return render_template('home.html', name = 'user')
 
+
 @app.route('/viewcrime', methods=['GET', 'POST'])
 def viewcrime():
     keyword = request.form['keyword']
     location = request.form['location']
-    print (keyword, 'location', location)
+    print keyword, location
     try:
-        gmaps = googlemaps.Client(key=g.GKEY)
+        gmaps = googlemaps.Client(key=read_json('params.json', 'GKEY'))
 
         # Geocoding an address
         geocode_result = gmaps.geocode(location)
@@ -47,10 +50,9 @@ def viewcrime():
         ll = str(latitude) + ', ' + str(longitude)
         url = 'https://data.police.uk/api/crimes-street/all-crime?'
 
-
         params = dict(
-            lat = latitude,
-            lng = longitude
+            lat=latitude,
+            lng=longitude
         )
         resp = requests.get(url=url, params=params)
 
@@ -62,15 +64,8 @@ def viewcrime():
             else:
                 results_dict[item['category']] += 1
 
-        return render_template('results.html', results = results_dict)
-
+        return render_template('results.html', results=results_dict)
 
     except Exception as e:
         print ('Error:', e)
         return 'Unable to track location, please enter a different address'
-
-
-
-
-if __name__ == '__main__':
-    app.run(debug= True)
