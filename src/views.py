@@ -1,8 +1,9 @@
 import json
-import requests
-from flask import jsonify, request, abort, make_response, render_template
+from collections import defaultdict
 
+from flask import jsonify, request, abort, make_response, render_template
 import googlemaps
+import requests
 
 from src.core import app
 from readfile import read_json
@@ -32,19 +33,20 @@ def healthz():
 
 @app.route("/")
 def hello():
-    return render_template('home.html', name = 'user')
+    return render_template('home.html', name='user')
 
 
 @app.route('/viewcrime', methods=['GET', 'POST'])
 def viewcrime():
+
     keyword = request.form['keyword']
     location = request.form['location']
-    print keyword, location
+
     try:
         gmaps = googlemaps.Client(key=read_json('params.json', 'GKEY'))
 
         # Geocoding an address
-        geocode_result = gmaps.geocode(location)
+        geocode_result = gmaps.geocode(str(location))
         latitude = geocode_result[0]['geometry']['location']['lat']
         longitude = geocode_result[0]['geometry']['location']['lng']
         ll = str(latitude) + ', ' + str(longitude)
@@ -54,17 +56,26 @@ def viewcrime():
             lat=latitude,
             lng=longitude
         )
+
         resp = requests.get(url=url, params=params)
 
         data = json.loads(resp.text)
-        results_dict = {}
-        for item in data:
-            if not results_dict.get(item['category']):
-                results_dict[item['category']] = 1
-            else:
-                results_dict[item['category']] += 1
 
-        return render_template('results.html', results=results_dict)
+        d = defaultdict(dict)
+        for item in data:
+            if not d.get(item['category']):
+                d[item['category']] = 1
+            else:
+                d[item['category']] += 1
+
+        results_list = []
+        for key, value in d.iteritems():
+            result = {
+                "label": key, "value": value
+                }
+            results_list.append(result)
+
+        return render_template('results.html', results=results_list)
 
     except Exception as e:
         print ('Error:', e)
