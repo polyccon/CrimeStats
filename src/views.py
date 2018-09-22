@@ -35,8 +35,8 @@ def hello():
     return render_template('home.html', name='user')
 
 
-def get_data():
-    location = 'London'
+def get_data(location):
+    # location = 'London'
     KEY = read_json('params.json', 'MAPQ')
     url1 = 'http://open.mapquestapi.com/geocoding/v1/address?'
     params1= dict(
@@ -65,17 +65,18 @@ def get_data():
     results_list = []
     for key, value in d.iteritems():
         result = {
-            "label": key, "value": value
+            'label': key, 'value': value
             }
         results_list.append(result)
     return results_list
 
 
-@app.route("/data")
-def data():
-    return jsonify(get_data())
+@app.route('/data/<location>')
+def data(location):
+    return jsonify(get_data(location))
 
 
 @app.route('/viewcrime', methods=['GET', 'POST'])
 def viewcrime():
-    return render_template('results.html', )
+    location = request.form['location']
+    return render_template('results.html', location=location)
