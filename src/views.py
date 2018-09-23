@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-from flask import jsonify, request, abort, make_response, render_template
+from flask import jsonify, request, abort, make_response, render_template, redirect
 import requests
 
 from src.core import app
@@ -34,7 +34,9 @@ def healthz():
 def hello():
     return render_template('home.html')
 
-
+@app.route("/home")
+def home():
+    return redirect("/")
 def get_data(location):
     # location = 'London'
     KEY = read_json('params.json', 'MAPQ')
