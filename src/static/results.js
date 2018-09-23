@@ -43,9 +43,9 @@ function drawBarChart(divid, data){
 
   var margin = {
     top: 15,
-    right: 70,
+    right: 90,
     bottom: 15,
-    left: 200
+    left: 300
   };
 
   var width = 960 - margin.left - margin.right,

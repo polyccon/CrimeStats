@@ -6,12 +6,12 @@
 .arc path {
   stroke: #fff;
 }
-.display{
+.display-none{
+    display: none;
+}
+.display-flex{
     display:flex;
     flex-direction: row;
-}
-.text-size{
-    font-size:20px;
 }
 .text-color{
     color:red;
@@ -20,3 +20,47 @@
     text-align: center;
     font-family:sans-serif;
 }
+.button-styling{
+    font-size: 15px;
+    background-color: #2F4F4F;
+    color: white;
+    font-style: oblique 0deg;
+    width:300px;
+    height:50px;
+    border-radius: 6px;
+    border-size: 2px;
+    text-shadow: -2px 0px;
+}
+input {
+    border-radius: 6px;
+    border-size: 2px;
+    width:300px;
+    height:50px;
+    vertical-align: top;
+}
+.blink_text {
+
+    animation:1s blinker linear infinite;
+    -webkit-animation:1s blinker linear infinite;
+    -moz-animation:1s blinker linear infinite;
+
+     color: red;
+    }
+
+    @-moz-keyframes blinker {
+     0% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
+    @-webkit-keyframes blinker {
+     0% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }
+
+    @keyframes blinker {
+     0% { opacity: 1.0; }
+     50% { opacity: 0.0; }
+     100% { opacity: 1.0; }
+     }

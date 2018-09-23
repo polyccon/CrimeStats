@@ -7,10 +7,9 @@
     </head>
    <body class="body">
       <h1>Welcome to the UK Crime Stats site</h1>
-      <form action="{{ url_for('viewcrime') }}" method = 'POST'>
-        <label for="keyword" class ="keyword">Enter an address in the UK:</label>
-        <input type= 'text' name='location' placeholder='Enter postcode' id = 'location'>
-        <button id="submit_button">Get stats</button>
+      <form action="{{ url_for('viewcrime') }}" method ='POST'>
+        <input type= 'text' name='location' placeholder='Enter a UK address' id = 'location'>
+        <button type="submit" id="submit_button" class="button-styling">Get stats</button>
       </form>
    </body>
 </html>

@@ -34,19 +34,21 @@ def healthz():
 def hello():
     return render_template('home.html')
 
+
 @app.route("/home")
 def home():
     return redirect("/")
+
+
 def get_data(location):
-    # location = 'London'
     KEY = read_json('params.json', 'MAPQ')
     url1 = 'http://open.mapquestapi.com/geocoding/v1/address?'
-    params1= dict(
+    params1 = dict(
         key=KEY,
         location=location
     )
     resp1 = requests.get(url=url1, params=params1)
-    ll= json.loads(resp1.text)['results'][0]['locations'][0]['displayLatLng']
+    ll = json.loads(resp1.text)['results'][0]['locations'][0]['displayLatLng']
     latitude = ll['lat']
     longitude = ll['lng']
     url = 'https://data.police.uk/api/crimes-street/all-crime?'
