@@ -4,6 +4,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 </head>
 <style>
 
@@ -22,9 +23,18 @@
     display:flex;
     flex-direction: row;
 }
+.text-font{
+    font-family:sans-serif;
+}
+.text-size{
+    font-size:20px;
+}
+.text-color{
+    color:red;
+}
 </style>
 <body>
-    <div class="display center">
+    <div class="display center text-font">
         <div id="pie-chart"></div>
         <div id="bar-chart"></div>
 </div>
@@ -53,7 +63,12 @@ function drawPieChart(divid, data){
       .outerRadius(r);
   var pie = d3.layout.pie()           //this will create arc data for us given a list of values
       .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
-
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .html(function(data) {
+        return "<strong class='text-font'>"+data.data.label+":</strong> <span class='text-font text-color'>"+ data.value + "</span>";
+  })
+  vis.call(tip);
   var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
       .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties)
       .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
@@ -61,17 +76,9 @@ function drawPieChart(divid, data){
               .attr("class", "slice");    //allow us to style things in the slices (like text)
       arcs.append("svg:path")
               .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
-              .attr("d", arc);
-                              //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-      arcs.append("svg:text")                                     //add a label to each slice
-              .attr("transform", function(d) {                    //set the label's origin to the center of the arc
-              //we have to make sure to set these before calling arc.centroid
-              d.innerRadius = 0;
-              d.outerRadius = r;
-              return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
-          })
-          .attr("text-anchor", "middle")                          //center the text on it's origin
-          .text(function(d, i) { return data[i].label; });        //get the label from our original data array
+              .attr("d", arc)
+              .on('mouseover', tip.show)
+              .on('mouseout', tip.hide);
 }
 function drawBarChart(divid, data){
     color = d3.scale.category20c();
@@ -83,9 +90,9 @@ function drawBarChart(divid, data){
     //set up svg using margin conventions - we'll need plenty of room on the left for labels
     var margin = {
         top: 15,
-        right: 25,
+        right: 70,
         bottom: 15,
-        left: 150
+        left: 200
     };
 
     var width = 960 - margin.left - margin.right,
@@ -145,6 +152,9 @@ function drawBarChart(divid, data){
         .attr("y", function (d) {
             return y(d.label) + y.rangeBand() / 2 + 4;
         })
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .attr("fill", "red")
         //x position is 3 pixels to the right of the bar
         .attr("x", function (d) {
             return x(d.value) + 3;
