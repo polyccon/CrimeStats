@@ -1,0 +1,24 @@
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+.center{
+    text-align: center;
+}
+.display{
+    display:flex;
+    flex-direction: row;
+}
+.text-font{
+    font-family:sans-serif;
+}
+.text-size{
+    font-size:20px;
+}
+.text-color{
+    color:red;
+}

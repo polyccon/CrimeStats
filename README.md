@@ -1,2 +1,2 @@
-# REST-api
-A RESTful API with flask
+# View crime statistics in the UK!
+A flask powered app, with data visualisation using D3.
