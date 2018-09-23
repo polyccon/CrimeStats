@@ -32,7 +32,7 @@ def healthz():
 
 @app.route("/")
 def hello():
-    return render_template('home.html', name='user')
+    return render_template('home.html')
 
 
 def get_data(location):
