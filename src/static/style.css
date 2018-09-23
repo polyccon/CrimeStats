@@ -6,19 +6,17 @@
 .arc path {
   stroke: #fff;
 }
-.center{
-    text-align: center;
-}
 .display{
     display:flex;
     flex-direction: row;
-}
-.text-font{
-    font-family:sans-serif;
 }
 .text-size{
     font-size:20px;
 }
 .text-color{
     color:red;
+}
+.body{
+    text-align: center;
+    font-family:sans-serif;
 }
