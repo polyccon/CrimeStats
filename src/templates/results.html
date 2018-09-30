@@ -10,7 +10,7 @@
 <body class="body">
     <div id="header">
         <h2> You are looking at crime stats for: <h2>
-            <p class="blink_text">{{location}}<p>
+            <p id="blink" class="blink_text">{{location}}<p>
     <div>
     <div class="display-flex">
         <div id="pie-chart"></div>
@@ -24,6 +24,7 @@
 d3.json('/data/'+'{{location}}', function(error, data) {
     drawPieChart('pie-chart', data);
     drawBarChart('bar-chart', data);
+    document.getElementById("blink").classList.remove("blink_text");
     })
 </script>
    </body>
