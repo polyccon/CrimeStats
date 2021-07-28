@@ -62,7 +62,7 @@ def get_data(location):
             d[item['category']] += 1
 
     results_list = []
-    for key, value in d.iteritems():
+    for key, value in d.items():
         result = {
             'label': key, 'value': value
             }

@@ -1,0 +1,12 @@
+version: '3.3'
+
+services:
+    web:
+        image: crimestats
+        build:
+            context: .
+        volumes:
+            - ./:/code/
+        command: ["python", "code/run.py", "0.0.0.0:5500"]
+        ports:
+            - "5500:5500"
