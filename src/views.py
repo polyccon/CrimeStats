@@ -77,5 +77,5 @@ def data(location):
 
 @app.route('/viewcrime', methods=['GET', 'POST'])
 def viewcrime():
-    location = request.form['location']
-    return render_template('results.html', location=location)
+    postcode = request.form['postcode']
+    return render_template('results.html', location=postcode)
