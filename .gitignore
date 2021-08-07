@@ -1,0 +1,8 @@
+my_devenv
+*.pyc
+params.json
+env.py
+env.sh
+list/
+*__pycache__
+.DS_Store
