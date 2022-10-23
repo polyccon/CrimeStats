@@ -41,17 +41,27 @@ def home():
 
 
 def get_data(location):
+
+    KEY = read_json('params.json', 'MAPQ')
+    url1 = 'http://open.mapquestapi.com/geocoding/v1/address?'
+    params = dict(key=KEY,
+    location=location
+    )
+    resp1 = requests.get(url=url1, params=params)
+    print (resp1)
+    ll= json.loads(resp1.text)['results'][0]['locations'][0]['displayLatLng']
+
     url_postcode = "http://api.postcodes.io/postcodes/"+location
     resp_postcode = requests.get(url=url_postcode)
     ll = json.loads(resp_postcode.text)['result']
     latitude = ll['latitude']
     longitude = ll['longitude']
     url = 'https://data.police.uk/api/crimes-street/all-crime?'
-    params = dict(
+    params1 = dict(
         lat=latitude,
         lng=longitude
     )
-    resp = requests.get(url=url, params=params)
+    resp = requests.get(url=url, params=params1)
     data = json.loads(resp.text)
 
     d = defaultdict(dict)
@@ -77,5 +87,8 @@ def data(location):
 
 @app.route('/viewcrime', methods=['GET', 'POST'])
 def viewcrime():
-    location = request.form['location']
-    return render_template('results.html', location=location)
+    address = request.form['address']
+    postcode = request.form['postcode']
+    if (address):
+        location = address
+    return render_template('results.html', location=postcode)
