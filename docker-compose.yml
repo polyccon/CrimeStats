@@ -7,6 +7,6 @@ services:
             context: .
         volumes:
             - ./:/code/
-        command: ["python", "code/run.py", "0.0.0.0:5500"]
+        command: [ "python", "code/run.py", "0.0.0.0:5500" ]
         ports:
             - "5500:5500"
