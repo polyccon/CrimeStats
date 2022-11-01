@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-    name   = "Spacelift_Test_Lambda_Function_Role"
+    name   = "Crime_Stats_Lambda_Function_Role"
     assume_role_policy = <<EOF
     {
     "Version": "2012-10-17",
@@ -52,11 +52,11 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
 data "archive_file" "zip_the_python_code" {
     type        = "zip"
     source_dir  = "${path.module}/python/"
-    output_path = "${path.module}/python/hello-python.zip"
+    output_path = "${path.module}/python/crime-stats.zip"
 }
 
 resource "aws_lambda_function" "terraform_lambda_func" {
-    filename                       = "${path.module}/package/hello-python.zip"
+    filename                       = "${path.module}/package/crime-stats.zip"
     function_name                  = "Crime_Stats_Lambda"
     role                           = aws_iam_role.lambda_role.arn
     handler                        = "index.lambda_handler"
