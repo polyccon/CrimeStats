@@ -49,12 +49,6 @@ resource "aws_iam_role_policy_attachment" "attach_iam_policy_to_iam_role" {
     policy_arn  = aws_iam_policy.iam_policy_for_lambda.arn
 }
 
-data "archive_file" "zip_the_python_code" {
-    type        = "zip"
-    source_dir  = "${path.module}/python/"
-    output_path = "${path.module}/python/crime-stats.zip"
-}
-
 resource "aws_lambda_function" "terraform_lambda_func" {
     filename                       = "${path.module}/package/crime-stats.zip"
     function_name                  = "Crime_Stats_Lambda"
