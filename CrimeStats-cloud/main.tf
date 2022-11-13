@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "crime-stats" {
-    filename                       = "${path.module}/python/crime-stats.zip"
+    filename                       = "${path.module}/code/crime-stats.zip"
     function_name                  = "Crime_Stats_Lambda"
     role                           = aws_iam_role.lambda_role.arn
     handler                        = "index.lambda_handler"

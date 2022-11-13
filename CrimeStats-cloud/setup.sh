@@ -4,5 +4,5 @@ cd package
 zip -r crime-stats.zip .
 cd ..
 pip3 freeze --path ./package > requirements.txt
-zip -g python/crime-stats.zip index.py
-zipinfo python/crime-stats.zip
+zip -g code/crime-stats.zip index.py
+zipinfo code/crime-stats.zip
