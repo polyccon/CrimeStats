@@ -9,6 +9,10 @@ resource "aws_lambda_function" "crime-stats" {
     handler                        = "index.lambda_handler"
     runtime                        = "python3.8"
     depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
+
+    timeouts {
+      create = "5m"
+    }
 }
 
 resource "aws_apigatewayv2_api" "lambda" {
