@@ -34,11 +34,18 @@ def get_data(location):
 
 
 def lambda_handler(event, context):
-    LOGGER.info("event", event)
+    LOGGER.debug("event", event)
+
     location = event.get("location", None)
     if not location:
         location = event.get("pathParameters", {}).get("location", None)
-    LOGGER.info("location", location)
+    LOGGER.debug("location", location)
+
     data = get_data(location)
-    LOGGER.info("data", data)
-    return json.loads(json.dumps((get_data(location))))
+    LOGGER.info(f"Successfully obtained data for location: {location}")
+
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps({"data": data}),
+    }
