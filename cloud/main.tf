@@ -2,6 +2,18 @@ provider "aws" {
   region = var.region
 }
 
+terraform {
+
+  required_version = ">= 1.3.0"
+
+  required_providers {
+    aws = {
+      version = "4.28.0"
+      source  = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_lambda_function" "crime-stats" {
     filename                       = "${path.module}/code/zip/crime-stats.zip"
     function_name                  = "Crime_Stats_Lambda"
@@ -16,7 +28,7 @@ resource "aws_lambda_function" "crime-stats" {
 }
 
 resource "aws_apigatewayv2_api" "lambda" {
-  name          = "serverless_lambda_gw"
+  name          = "crime-stats-http"
   protocol_type = "HTTP"
 }
 

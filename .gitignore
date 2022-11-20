@@ -5,4 +5,14 @@ env.py
 env.sh
 list/
 *__pycache__
-.DS_Store
+*terraform.tfplan
+*terraform.tfstate
+.terraform/
+./*.tfstate
+*.backup
+*.DS_Store
+*.log
+*.bak
+*~
+.*.swp
+.project
