@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "crime-stats" {
-    filename                       = "${path.module}/code/zip/crime-stats.zip"
+    filename                       = "${path.module}/${var.lambda_filename}"
     function_name                  = var.lambda_function_name
     role                           = aws_iam_role.lambda_role.arn
     handler                        = var.lambda_handler

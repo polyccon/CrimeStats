@@ -4,12 +4,11 @@ variable "region" {
   description = "AWS region to use"
 }
 
-# TODO
-# variable lambda_filename {
-#   default = "${path.module}/code/zip/crime-stats.zip"
-#   type = string
-#   description = "Path for the lambda function zip file"
-# }
+variable lambda_filename {
+  default = "code/zip/crime-stats.zip"
+  type = string
+  description = "Path for the lambda function zip file"
+}
 
 variable lambda_function_name {
   default     = "Crime_Stats_Lambda"
