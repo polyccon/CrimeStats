@@ -1,4 +1,4 @@
-resource "aws_lambda_function" "crime-stats" {
+resource "aws_lambda_function" "main" {
     filename                       = "${path.module}/${var.lambda_filename}"
     function_name                  = var.lambda_function_name
     role                           = aws_iam_role.lambda_role.arn

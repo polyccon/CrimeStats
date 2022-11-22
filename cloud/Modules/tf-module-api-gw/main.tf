@@ -3,14 +3,14 @@ resource "aws_apigatewayv2_api" "lambda" {
   protocol_type = var.api_gw_protocol_type
 }
 
-resource "aws_apigatewayv2_stage" "lambda" {
+resource "aws_apigatewayv2_stage" "main" {
   api_id = aws_apigatewayv2_api.lambda.id
 
   name        = var.api_gw_stage_name
   auto_deploy = true
 
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gw.arn
+    destination_arn = aws_cloudwatch_log_group.main.arn
 
     format = jsonencode({
       requestId               = "$context.requestId"
@@ -28,7 +28,7 @@ resource "aws_apigatewayv2_stage" "lambda" {
   }
 }
 
-resource "aws_apigatewayv2_integration" "crime-stats" {
+resource "aws_apigatewayv2_integration" "main" {
   api_id = aws_apigatewayv2_api.lambda.id
 
   integration_uri    = var.aws_lambda_invoke_arn
@@ -36,20 +36,20 @@ resource "aws_apigatewayv2_integration" "crime-stats" {
   integration_method = var.api_gw_integration_method
 }
 
-resource "aws_apigatewayv2_route" "crime-stats" {
+resource "aws_apigatewayv2_route" "main" {
   api_id = aws_apigatewayv2_api.lambda.id
 
   route_key = var.api_gw_route_key
-  target    = "integrations/${aws_apigatewayv2_integration.crime-stats.id}"
+  target    = "integrations/${aws_apigatewayv2_integration.main.id}"
 }
 
-resource "aws_cloudwatch_log_group" "api_gw" {
+resource "aws_cloudwatch_log_group" "main" {
   name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
 
   retention_in_days = var.api_gw_retention_in_days
 }
 
-resource "aws_lambda_permission" "api_gw" {
+resource "aws_lambda_permission" "main" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = var.aws_lambda_function_name
