@@ -5,6 +5,8 @@ env.py
 env.sh
 list/
 *__pycache__
+initialise.tf 
+.terraform/*
 *terraform.tfplan
 *terraform.tfstate
 .terraform/
