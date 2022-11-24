@@ -1,10 +1,10 @@
-resource "aws_apigatewayv2_api" "lambda" {
+resource "aws_apigatewayv2_api" "main" {
   name          = var.api_gw_name
   protocol_type = var.api_gw_protocol_type
 }
 
 resource "aws_apigatewayv2_stage" "main" {
-  api_id = aws_apigatewayv2_api.lambda.id
+  api_id = aws_apigatewayv2_api.main.id
 
   name        = var.api_gw_stage_name
   auto_deploy = true
@@ -29,7 +29,7 @@ resource "aws_apigatewayv2_stage" "main" {
 }
 
 resource "aws_apigatewayv2_integration" "main" {
-  api_id = aws_apigatewayv2_api.lambda.id
+  api_id = aws_apigatewayv2_api.main.id
 
   integration_uri    = var.aws_lambda_invoke_arn
   integration_type   = var.api_gw_integration_type
@@ -37,14 +37,14 @@ resource "aws_apigatewayv2_integration" "main" {
 }
 
 resource "aws_apigatewayv2_route" "main" {
-  api_id = aws_apigatewayv2_api.lambda.id
+  api_id = aws_apigatewayv2_api.main.id
 
   route_key = var.api_gw_route_key
   target    = "integrations/${aws_apigatewayv2_integration.main.id}"
 }
 
 resource "aws_cloudwatch_log_group" "main" {
-  name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
+  name = "/aws/api_gw/${aws_apigatewayv2_api.main.name}"
 
   retention_in_days = var.api_gw_retention_in_days
 }
@@ -55,6 +55,7 @@ resource "aws_lambda_permission" "main" {
   function_name = var.aws_lambda_function_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
+  source_arn = "${aws_apigatewayv2_api.main.execution_arn}/*/*"
 }
+
 
