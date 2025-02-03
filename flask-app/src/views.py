@@ -2,7 +2,7 @@ from flask import jsonify, request, abort, make_response, render_template, redir
 
 from src.core import app
 
-from data.convert_data import get_data
+from src.data.convert_data import get_data
 
 def _parse_request_body():
     """Extract data type from request body."""

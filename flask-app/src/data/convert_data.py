@@ -1,7 +1,7 @@
 import json
 import requests
 from collections import defaultdict
-from services.location_client import LocationClient
+from src.services.location_client import LocationClient
 
 
 def convert_police_data(data):
