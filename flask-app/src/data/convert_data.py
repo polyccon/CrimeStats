@@ -1,6 +1,8 @@
 import json
 import requests
 from collections import defaultdict
+from services.location_client import LocationClient
+
 
 def convert_police_data(data):
     d = defaultdict(dict)
@@ -20,11 +22,9 @@ def convert_police_data(data):
 
 
 def get_data(location):
-    url_postcode = f"http://api.postcodes.io/postcodes/{location}"
-    resp_postcode = requests.get(url=url_postcode)
-    ll = json.loads(resp_postcode.text)['result']
-    latitude = ll['latitude']
-    longitude = ll['longitude']
+    location_client = LocationClient(location)
+    latitude, longitude = location_client.location_to_coordinates()
+
     url = 'https://data.police.uk/api/crimes-street/all-crime?'
     params = dict(
         lat=latitude,
