@@ -23,7 +23,7 @@ def convert_police_data(data):
 
 def get_data(location):
     location_client = LocationClient(location)
-    latitude, longitude = location_client.location_to_coordinates()
+    latitude, longitude = location_client.postcode_to_coordinates()
 
     url = 'https://data.police.uk/api/crimes-street/all-crime?'
     params = dict(
