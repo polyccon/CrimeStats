@@ -10,7 +10,7 @@ def _parse_request_body():
     try:
         id_ = request_body['id']
         items = request_body['items']
-
+        return id_, items
     except KeyError:
         # Missing necessary fields.
         response_body = {
@@ -18,7 +18,6 @@ def _parse_request_body():
             "'id', 'items' key in request body"
         }
         abort(make_response(jsonify(response_body), 400))
-    return id_, items
 
 
 @app.route('/healthz', methods=['GET'])
