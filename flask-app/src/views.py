@@ -1,7 +1,7 @@
 from flask import jsonify, request, abort, make_response, render_template, redirect
 
 from src.core import app
-from src.data.convert_data import get_crime_categories
+from src.data.convert_data import CrimeDataProcessor
 
 
 def _parse_request_body():
@@ -37,7 +37,8 @@ def home():
 
 @app.route('/data/<location>')
 def data(location):
-    return jsonify(get_crime_categories(location))
+    processor = CrimeDataProcessor(location)
+    return jsonify(processor.get_crime_categories())
 
 
 @app.route('/viewcrime', methods=['GET', 'POST'])
