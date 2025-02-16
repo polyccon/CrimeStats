@@ -4,22 +4,15 @@ from collections import defaultdict
 
 from src.services.location_client import LocationClient
 from src.services.police_client import PoliceClient
+from collections import defaultdict
 
 
 def convert_police_data(data):
-    d = defaultdict(dict)
+    d = defaultdict(int)
     for item in data:
-        if not d.get(item['category']):
-            d[item['category']] = 1
-        else:
-            d[item['category']] += 1
+        d[item['category']] += 1
 
-    results_list = []
-    for key, value in d.items():
-        result = {
-            'label': key, 'value': value
-        }
-        results_list.append(result)
+    results_list = [{'label': key, 'value': value} for key, value in d.items()]
     return results_list
 
 

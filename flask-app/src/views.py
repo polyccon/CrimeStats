@@ -1,8 +1,8 @@
 from flask import jsonify, request, abort, make_response, render_template, redirect
 
 from src.core import app
-
 from src.data.convert_data import get_data
+
 
 def _parse_request_body():
     """Extract data type from request body."""
@@ -22,7 +22,7 @@ def _parse_request_body():
 
 @app.route('/healthz', methods=['GET'])
 def healthz():
-    return ('', 200)
+    return '', 200
 
 
 @app.route("/")
