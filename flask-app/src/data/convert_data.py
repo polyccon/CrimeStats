@@ -27,10 +27,19 @@ class CrimeDataProcessor:
 
         d = defaultdict(int)
         for item in self.crime_data:
-            d[item[key]] += 1
+            if key == "outcome_status" and item["outcome_status"]:
+                d[item.get(key, {}).get("category", "Uknown")] += 1
+            if key == "outcome_status" and not item["outcome_status"]:
+                d["Unknown"] += 1
+            elif key == "category":
+                d[item[key]] += 1
 
         return [{'label': key, 'value': value} for key, value in d.items()]
 
     def get_crime_categories(self):
         """Extracts crime categories."""
         return self.gather_specific_data("category")
+
+    def get_crime_outcomes(self):
+        """Extracts crime categories."""
+        return self.gather_specific_data("outcome_status")

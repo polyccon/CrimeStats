@@ -35,10 +35,18 @@ def home():
     return redirect("/")
 
 
-@app.route('/data/<location>')
-def data(location):
+@app.route('/category_data/<location>')
+def category_data(location):
     processor = CrimeDataProcessor(location)
     return jsonify(processor.get_crime_categories())
+
+
+@app.route('/outcome_data/<location>')
+def outcome_data(location):
+    processor = CrimeDataProcessor(location)
+
+    data = processor.get_crime_outcomes()
+    return jsonify(processor.get_crime_outcomes())
 
 
 @app.route('/viewcrime', methods=['GET', 'POST'])

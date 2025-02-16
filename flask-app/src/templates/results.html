@@ -9,23 +9,35 @@
 </head>
 <body class="body">
     <div id="header">
-        <h2> You are looking at crime stats for: <h2>
-            <p id="blink" class="blink_text">{{location}}<p>
-    <div>
+        <h2> You are looking at crime stats for: </h2>
+            <p id="category" class="category_text">{{location}}<p>
+
     <div class="display-flex">
         <div id="pie-chart"></div>
         <div id="bar-chart"></div>
     </div>
+            <p id="outcomes" class="outcomes_text">{{location}}<p>
+    <div class="display-flex">
+        <div id="pie-chart-outcomes"></div>
+        <div id="bar-chart-outcomes"></div>
+    </div>
+            </div>
     <form action="/">
       <button type="submit" value="Home page" class="button-styling">Home page</button>
     </form>
+</body>
 <script type="text/javascript" src="/static/results.js"></script>
 <script type="text/javascript">
-d3.json('/data/'+'{{location}}', function(error, data) {
+d3.json('/category_data/'+'{{location}}', function(error, data) {
     drawPieChart('pie-chart', data);
     drawBarChart('bar-chart', data);
-    document.getElementById("blink").classList.remove("blink_text");
+    document.getElementById("category").classList.remove("category_text");
+    })
+d3.json('/outcome_data/'+'{{location}}', function(error, data) {
+    drawPieChart('pie-chart-outcomes', data);
+    drawBarChart('bar-chart-outcomes', data);
+    document.getElementById("outcomes").classList.remove("outcomes_text");
     })
 </script>
-   </body>
+
 </html>
