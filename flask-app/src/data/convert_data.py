@@ -1,10 +1,7 @@
-import json
-import requests
 from collections import defaultdict
 
 from src.services.location_client import LocationClient
 from src.services.police_client import PoliceClient
-from collections import defaultdict
 
 
 def convert_police_data(data):
@@ -16,7 +13,7 @@ def convert_police_data(data):
     return results_list
 
 
-def get_data(location):
+def get_crime_categories(location):
     location_client = LocationClient(location)
     latitude, longitude = location_client.postcode_to_coordinates()
 
