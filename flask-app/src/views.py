@@ -44,8 +44,6 @@ def category_data(location):
 @app.route('/outcome_data/<location>')
 def outcome_data(location):
     processor = CrimeDataProcessor(location)
-
-    data = processor.get_crime_outcomes()
     return jsonify(processor.get_crime_outcomes())
 
 

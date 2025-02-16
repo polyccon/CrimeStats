@@ -27,19 +27,25 @@ class CrimeDataProcessor:
 
         d = defaultdict(int)
         for item in self.crime_data:
-            if key == "outcome_status" and item["outcome_status"]:
-                d[item.get(key, {}).get("category", "Uknown")] += 1
-            if key == "outcome_status" and not item["outcome_status"]:
-                d["Unknown"] += 1
+            if key == "outcome_status":
+                outcome = item.get("outcome_status")
+                if outcome:
+                    # Get category from outcome_status or "Unknown" if not available
+                    category = outcome.get("category", "Unknown")
+                else:
+                    category = "Unknown"
+                d[category] += 1
             elif key == "category":
-                d[item[key]] += 1
+                # Directly count occurrences of the 'category'
+                category = item.get(key, "Unknown")
+                d[category] += 1
 
-        return [{'label': key, 'value': value} for key, value in d.items()]
+        return [{'label': k, 'value': v} for k, v in d.items()]
 
     def get_crime_categories(self):
         """Extracts crime categories."""
         return self.gather_specific_data("category")
 
     def get_crime_outcomes(self):
-        """Extracts crime categories."""
+        """Extracts crime outcomes."""
         return self.gather_specific_data("outcome_status")
