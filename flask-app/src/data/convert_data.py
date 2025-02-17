@@ -27,13 +27,10 @@ class CrimeDataProcessor:
 
         d = defaultdict(int)
         for item in self.crime_data:
+            topic = item.get(key)
             if key == "outcome_status":
-                outcome = item.get("outcome_status")
-                outcome_category = outcome.get("category", "Unknown") if outcome else "Unknown"
-                d[outcome_category] += 1
-            elif key == "category":
-                category = item.get(key, "Unknown")
-                d[category] += 1
+                topic = topic.get("category", "Unknown") if topic else "Unknown"
+            d[topic] += 1
 
         return [{'label': k, 'value': v} for k, v in d.items()]
 
