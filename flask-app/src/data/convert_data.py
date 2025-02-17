@@ -17,7 +17,7 @@ class CrimeDataProcessor:
 
     def fetch_crime_data(self) -> None:
         """Fetch crime data only when needed."""
-        if self.crime_data is None:  # Avoid redundant API calls
+        if not self.crime_data:
             latitude, longitude = self.location_client.postcode_to_coordinates()
             self.crime_data = self.police_client.get_data_for_coordinates(latitude, longitude)
 
@@ -30,13 +30,11 @@ class CrimeDataProcessor:
             if key == "outcome_status":
                 outcome = item.get("outcome_status")
                 if outcome:
-                    # Get category from outcome_status or "Unknown" if not available
                     outcome_category = outcome.get("category", "Unknown")
                 else:
                     outcome_category = "Unknown"
                 d[outcome_category] += 1
             elif key == "category":
-                # Directly count occurrences of the 'category'
                 category = item.get(key, "Unknown")
                 d[category] += 1
 
