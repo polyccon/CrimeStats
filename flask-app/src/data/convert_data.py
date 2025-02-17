@@ -29,10 +29,7 @@ class CrimeDataProcessor:
         for item in self.crime_data:
             if key == "outcome_status":
                 outcome = item.get("outcome_status")
-                if outcome:
-                    outcome_category = outcome.get("category", "Unknown")
-                else:
-                    outcome_category = "Unknown"
+                outcome_category = outcome.get("category", "Unknown") if outcome else "Unknown"
                 d[outcome_category] += 1
             elif key == "category":
                 category = item.get(key, "Unknown")
