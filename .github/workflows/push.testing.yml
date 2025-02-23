@@ -1,4 +1,4 @@
-name: call_testing_linting_with_db
+name: call_testing_linting
 
 on:
   push:
