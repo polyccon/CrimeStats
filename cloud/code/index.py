@@ -1,36 +1,10 @@
 import json
-from collections import defaultdict
-import requests
 import logging
+
+from src.data.convert_data import CrimeDataProcessor
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.ERROR)
-
-
-def get_data(location):
-    results_list = []
-    if location:
-        url_postcode = "http://api.postcodes.io/postcodes/" + location
-        resp_postcode = requests.get(url=url_postcode)
-        ll = json.loads(resp_postcode.text)["result"]
-        latitude = ll["latitude"]
-        longitude = ll["longitude"]
-        url = "https://data.police.uk/api/crimes-street/all-crime?"
-        params = dict(lat=latitude, lng=longitude)
-        resp = requests.get(url=url, params=params)
-        data = json.loads(resp.text)
-
-        d = defaultdict(dict)
-        for item in data:
-            if not d.get(item["category"]):
-                d[item["category"]] = 1
-            else:
-                d[item["category"]] += 1
-
-        for key, value in d.items():
-            result = {"label": key, "value": value}
-            results_list.append(result)
-    return results_list
 
 
 def lambda_handler(event, context):
@@ -41,7 +15,8 @@ def lambda_handler(event, context):
         location = event.get("pathParameters", {}).get("location", None)
     LOGGER.debug("location", location)
 
-    data = get_data(location)
+    processor = CrimeDataProcessor(location)
+    data = processor.get_crime_categories()
     LOGGER.info(f"Successfully obtained data for location: {location}")
 
     return {
