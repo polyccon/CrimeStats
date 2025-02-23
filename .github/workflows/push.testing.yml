@@ -1,0 +1,10 @@
+name: call_testing_linting_with_db
+
+on:
+  push:
+  workflow_dispatch:
+
+
+jobs:
+  call-reusable-testing-linting:
+    uses: polyccon/github-actions-for-python-projects/.github/workflows/reusable-python-testing-linting.yml@main
