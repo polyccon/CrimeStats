@@ -16,3 +16,6 @@ build:
 
 test: ## Updates requirements, rules and runs all available tests locally.
 	${RUN_COMPOSE} pytest ${USE_MULTIPLE_CORES} . ${TEST_PARAMS} -vv
+
+lint: ## Updates requirements, rules and runs all available tests locally.
+	${RUN_COMPOSE} ruff format
