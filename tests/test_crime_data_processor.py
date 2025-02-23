@@ -1,9 +1,9 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from src.data.convert_data import CrimeDataProcessor
 
-# Mock data
+
 MOCK_COORDINATES = (51.5074, -0.1278)  # London example
 MOCK_CRIME_DATA = [
     {"category": "burglary", "outcome_status": {"category": "Under investigation"}},
@@ -12,17 +12,19 @@ MOCK_CRIME_DATA = [
     {"category": "theft", "outcome_status": {"category": "Under investigation"}},
 ]
 
+
 @pytest.fixture
 def mock_processor():
     """Fixture to create a CrimeDataProcessor with mocked API calls."""
-    with patch("src.data.convert_data.LocationClient") as MockLocationClient, \
-         patch("src.data.convert_data.PoliceClient") as MockPoliceClient:
-
-        # Mock LocationClient behavior
+    with (
+        patch("src.data.convert_data.LocationClient") as MockLocationClient,
+        patch("src.data.convert_data.PoliceClient") as MockPoliceClient,
+    ):
+        # Mock LocationClient behaviour
         mock_location = MockLocationClient.return_value
         mock_location.postcode_to_coordinates.return_value = MOCK_COORDINATES
 
-        # Mock PoliceClient behavior
+        # Mock PoliceClient behaviour
         mock_police = MockPoliceClient.return_value
         mock_police.get_data_for_coordinates.return_value = MOCK_CRIME_DATA
 
@@ -33,7 +35,7 @@ def test_get_crime_categories(mock_processor):
     """Test if categories are counted correctly."""
     expected_result = [
         {"label": "burglary", "value": 2},
-        {"label": "theft", "value": 2}
+        {"label": "theft", "value": 2},
     ]
     assert mock_processor.get_crime_categories() == expected_result
 
@@ -52,9 +54,18 @@ def test_get_crime_outcomes(mock_processor):
 def test_fetch_crime_data_calls_api_once(mock_processor):
     """Ensure postcode_to_coordinates and get_data_for_coordinates are only called once."""
 
-    with patch.object(mock_processor.location_client, "postcode_to_coordinates", return_value=(51.5074, -0.1278)) as mock_location, \
-         patch.object(mock_processor.police_client, "get_data_for_coordinates", return_value=[{"category": "theft"}]) as mock_police:
-
+    with (
+        patch.object(
+            mock_processor.location_client,
+            "postcode_to_coordinates",
+            return_value=(51.5074, -0.1278),
+        ) as mock_location,
+        patch.object(
+            mock_processor.police_client,
+            "get_data_for_coordinates",
+            return_value=[{"category": "theft"}],
+        ) as mock_police,
+    ):
         mock_processor.get_crime_categories()
         mock_processor.get_crime_outcomes()
 

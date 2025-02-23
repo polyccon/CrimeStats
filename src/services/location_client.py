@@ -9,7 +9,7 @@ class LocationClient:
     def postcode_to_coordinates(self):
         url = f"http://api.postcodes.io/postcodes/{self.location}"
         resp_postcode = requests.get(url=url)
-        data = json.loads(resp_postcode.text)['result']
-        latitude = data['latitude']
-        longitude = data['longitude']
+        data = json.loads(resp_postcode.text)["result"]
+        latitude = data["latitude"]
+        longitude = data["longitude"]
         return latitude, longitude

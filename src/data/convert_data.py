@@ -19,7 +19,9 @@ class CrimeDataProcessor:
         """Fetch crime data only when needed."""
         if not self.crime_data:
             latitude, longitude = self.location_client.postcode_to_coordinates()
-            self.crime_data = self.police_client.get_data_for_coordinates(latitude, longitude)
+            self.crime_data = self.police_client.get_data_for_coordinates(
+                latitude, longitude
+            )
 
     def extract_specific_data(self, key: str) -> List:
         """Helper function to count occurrences of a given key in crime data."""
@@ -32,7 +34,7 @@ class CrimeDataProcessor:
                 topic = topic.get("category", "Unknown") if topic else "Unknown"
             d[topic] += 1
 
-        return [{'label': k, 'value': v} for k, v in d.items()]
+        return [{"label": k, "value": v} for k, v in d.items()]
 
     def get_crime_categories(self) -> List:
         """Extracts crime categories."""
