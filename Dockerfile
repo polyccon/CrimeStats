@@ -12,6 +12,4 @@ RUN pip3 install -r requirements.txt
 RUN mkdir code
 RUN cd code
 
-COPY . .
-
 EXPOSE 5500
