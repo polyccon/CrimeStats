@@ -1,6 +1,6 @@
 from flask import jsonify, request, abort, make_response, render_template, redirect
 
-from core import app
+from src.core import app
 from src.data.convert_data import CrimeDataProcessor
 
 
