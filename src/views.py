@@ -1,4 +1,4 @@
-from flask import jsonify, request, abort, make_response, render_template, redirect
+from flask import jsonify, request, abort, make_response, render_template, redirect, send_file
 
 from src.core import app
 from src.data.convert_data import CrimeDataProcessor
@@ -48,3 +48,19 @@ def outcome_data(location):
 def viewcrime():
     postcode = request.form["postcode"]
     return render_template("results.html", location=postcode)
+
+
+@app.route("/heatmap", methods=["GET"])
+def get_heatmap():
+    """API endpoint to generate and return the crime heatmap."""
+    month = request.args.get("month", "2024-12")  # Default to December 2024
+    area = request.args.get("area", "city-of-london")  # Default to City of London
+    location = "SW1X7LY"
+
+    processor = CrimeDataProcessor(location)
+    result = processor.generate_heatmap()
+
+    if isinstance(result, dict) and "error" in result:
+        return jsonify(result), 400  # Return error if file not found
+
+    return send_file(result, mimetype="text/html")
