@@ -1,7 +1,8 @@
+import os
+from datetime import datetime
 from collections import defaultdict
 from typing import List
 import folium
-import os
 from folium.plugins import HeatMap
 
 from src.services.location_client import LocationClient
@@ -85,12 +86,12 @@ class CrimeDataProcessor:
                 tooltip="Click for details",
                 icon=folium.Icon(color="blue", icon="info-sign")
             ).add_to(m)
-        date = "test"
+        current_year_month = datetime.now().strftime("%Y-%m")
         # Save map to an HTML file
         save_path = "/code/src"
         os.makedirs(save_path, exist_ok=True)
 
-        map_filename = os.path.join(save_path, f"crime_heatmap_{date}.html")
+        map_filename = os.path.join(save_path, f"crime_heatmap_{self.location}_{current_year_month}.html")
         m.save(map_filename)
 
         return map_filename
