@@ -50,12 +50,13 @@ def viewcrime():
     return render_template("results.html", location=postcode)
 
 
-@app.route("/heatmap", methods=["GET"])
-def get_heatmap():
+@app.route("/heatmap", methods=["GET", "POST"])
+def heatmap():
     """API endpoint to generate and return the crime heatmap."""
     month = request.args.get("month", "2024-12")  # Default to December 2024
     area = request.args.get("area", "city-of-london")  # Default to City of London
-    location = "SW1X7LY"
+
+    location = request.form.get("postcode", "SW1X7LY")
 
     processor = CrimeDataProcessor(location)
     result = processor.generate_heatmap()
