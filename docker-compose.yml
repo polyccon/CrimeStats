@@ -6,6 +6,6 @@ services:
         volumes:
             - ./:/code/
         working_dir: /code
-        command: [ "python", "run.py", "0.0.0.0:5500" ]
+        command: [ "conda", "run", "-n", "geo_env", "python", "run.py", "0.0.0.0:5500" ]
         ports:
             - "5500:5500"
