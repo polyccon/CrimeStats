@@ -56,14 +56,28 @@ class CrimeDataProcessor:
         if not self.crime_data:
             return {"error": "No crime data found or API request failed"}
 
+        # Define crime type to color mapping
+        crime_colors = {
+            "violent-crime": "red",
+            "burglary": "orange",
+            "anti-social-behaviour": "purple",
+            "robbery": "darkred",
+            "public-order": "blue",
+            "drugs": "green",
+            "vehicle-crime": "black",
+            "criminal-damage-arson": "darkblue",
+            "other-theft": "gray",
+        }
+
         # Extract lat/lng and details
         crime_list = []
         for crime in self.crime_data:
             location = crime.get("location", {})
+            crime_type = crime.get("category", "other-crime")  # Default category if missing
             crime_list.append({
                 "latitude": location.get("latitude"),
                 "longitude": location.get("longitude"),
-                "crime_type": crime.get("category"),
+                "crime_type": crime_type,
                 "street_name": location.get("street", {}).get("name", "Unknown")
             })
 
@@ -77,17 +91,23 @@ class CrimeDataProcessor:
         heat_data = [[float(c["latitude"]), float(c["longitude"])] for c in crime_list]
         HeatMap(heat_data, name="Crime Heatmap").add_to(m)
 
-        # Add crime markers with popups
+        # Add crime markers with color-coded icons
         for crime in crime_list:
-            popup_info = f"<b>Crime:</b> {crime['crime_type']}<br><b>Location:</b> {crime['street_name']}"
+            crime_type = crime["crime_type"]
+            popup_info = f"<b>Crime:</b> {crime_type}<br><b>Location:</b> {crime['street_name']}"
+
+            # Get color based on crime type, default to "gray" if not found
+            icon_color = crime_colors.get(crime_type, "gray")
+
             folium.Marker(
                 location=[float(crime["latitude"]), float(crime["longitude"])],
                 popup=folium.Popup(popup_info, max_width=300),
                 tooltip="Click for details",
-                icon=folium.Icon(color="blue", icon="info-sign")
+                icon=folium.Icon(color=icon_color, icon="info-sign")
             ).add_to(m)
+
+        # Generate filename based on date
         current_year_month = datetime.now().strftime("%Y-%m")
-        # Save map to an HTML file
         save_path = "/code/src"
         os.makedirs(save_path, exist_ok=True)
 
