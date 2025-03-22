@@ -9,3 +9,12 @@ services:
         command: [ "conda", "run", "-n", "geo_env", "python", "run.py", "0.0.0.0:5500" ]
         ports:
             - "5500:5500"
+        environment:
+            - PYTHON UNBUFFERED=1  # ✅ Ensure Python doesn’t buffer logs
+        stdin_open: true  # ✅ Keep container interactive
+        tty: true         # ✅ Enable terminal output
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "3"
