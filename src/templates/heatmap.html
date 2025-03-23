@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Heatmap</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+    <div id="map" style="height: 500px;"></div>
+
+    <!-- Container where the heatmap will be updated -->
+        {{ map_html_content|safe }}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let initialLat = parseFloat("{{ lat|tojson|safe }}") || 51.5074;
+            let initialLng = parseFloat("{{ lng|tojson|safe }}") || -0.1278;
+
+            console.log("Initial coordinates:", initialLat, initialLng);
+
+            const map = L.map('map').setView([initialLat, initialLng], 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const heatmapContainer = document.getElementById('heatmap-container');
+            heatmapContainer.innerHTML = `{{ map_html_content|safe }}`;
+
+            function updateHeatmap(lat, lng) {
+                console.log("Updating heatmap with new coordinates:", lat, lng);
+
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("New heatmap data received.");
+                    heatmapContainer.innerHTML = data;  // Update only the heatmap div
+                })
+                .catch(error => console.error('Error fetching new heatmap:', error));
+            }
+
+            map.on('moveend', function () {
+                const center = map.getCenter();
+                updateHeatmap(center.lat, center.lng);
+            });
+
+            updateHeatmap(initialLat, initialLng);
+        });
+    </script>
+
+</body>
+</html>

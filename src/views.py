@@ -1,4 +1,7 @@
-from flask import jsonify, request, abort, make_response, render_template, redirect, send_file
+import os
+
+from flask import jsonify, request, abort, make_response, render_template, redirect, send_file, url_for, \
+    send_from_directory
 
 from src.core import app
 from src.data.convert_data import CrimeDataProcessor
@@ -22,14 +25,21 @@ def healthz():
     return "", 200
 
 
+# @app.route("/")
+# def hello():
+#     return render_template("home.html")
+
+
+# @app.route("/home")
+# def home():
+#     return redirect("/")
+
 @app.route("/")
-def hello():
-    return render_template("home.html")
-
-
-@app.route("/home")
 def home():
-    return redirect("/")
+    """Redirect to the heatmap page with London's central coordinates."""
+    default_lat = 51.5074  # Central London (Charing Cross)
+    default_lng = -0.1278
+    return redirect(url_for("get_heatmap", lat=default_lat, lng=default_lng))
 
 
 @app.route("/category_data/<location>")
@@ -50,18 +60,48 @@ def viewcrime():
     return render_template("results.html", location=postcode)
 
 
-@app.route("/heatmap", methods=["GET", "POST"])
-def heatmap():
-    """API endpoint to generate and return the crime heatmap."""
-    month = request.args.get("month", "2024-12")  # Default to December 2024
-    area = request.args.get("area", "city-of-london")  # Default to City of London
+@app.route("/heatmap_data")
+def heatmap_data():
+    lat = request.args.get("lat")
+    lng = request.args.get("lng")
 
-    location = request.form.get("postcode", "SW1X7LY")
+    # Fetch crime data based on lat and lng (this could be from an API or database)
+    processor = CrimeDataProcessor(lat, lng)
+    crime_data = processor.fetch_crime_data()
 
-    processor = CrimeDataProcessor(location)
-    result = processor.generate_heatmap()
+    return jsonify({"crimes": crime_data})
 
-    if isinstance(result, dict) and "error" in result:
-        return jsonify(result), 400  # Return error if file not found
 
-    return send_file(result, mimetype="text/html")
+@app.route("/heatmap", methods=["GET"])
+def get_heatmap():
+    """API endpoint to fetch and return heatmap HTML content."""
+    try:
+        lat = request.args.get("lat", default="51.5074")
+        lng = request.args.get("lng", default="-0.1278")
+
+        if lat is None or lng is None:
+            return jsonify({"error": "Missing required parameters: lat, lng"}), 400
+
+        lat, lng = float(lat), float(lng)
+
+        # Generate heatmap based on location
+        processor = CrimeDataProcessor(lat, lng)
+        map_filename = processor.generate_heatmap()
+
+        # Read only the heatmap HTML content
+        with open(map_filename, "r", encoding="utf-8") as file:
+            map_html_content = file.read()
+
+        # If this is an AJAX request (dynamic update), return only the map HTML
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return map_html_content  # Only return the updated heatmap
+
+        # Otherwise, render the full heatmap.html (for first page load)
+        return render_template("heatmap.html", lat=lat, lng=lng, map_html_content=map_html_content)
+
+    except ValueError as e:
+        return jsonify({"error": f"Invalid parameter value: {e}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
