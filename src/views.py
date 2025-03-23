@@ -1,7 +1,12 @@
+import logging
 from flask import jsonify, request, abort, make_response, render_template, redirect, send_file
 
 from src.core import app
 from src.data.convert_data import CrimeDataProcessor
+
+FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+LOGGER = logging.getLogger(__name__)
 
 
 def _parse_request_body():
@@ -57,11 +62,13 @@ def heatmap():
     area = request.args.get("area", "city-of-london")  # Default to City of London
 
     location = request.form.get("postcode", "SW1X7LY")
+    LOGGER.info(f"Generating heatmap for {location}")
 
     processor = CrimeDataProcessor(location)
     result = processor.generate_heatmap()
 
     if isinstance(result, dict) and "error" in result:
+        LOGGER.error(f"Error generating heatmap: {result['error']}")
         return jsonify(result), 400  # Return error if file not found
 
     return send_file(result, mimetype="text/html")
