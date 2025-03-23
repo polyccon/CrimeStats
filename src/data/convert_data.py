@@ -108,7 +108,7 @@ class CrimeDataProcessor:
 
         # Generate filename based on date
         current_year_month = datetime.now().strftime("%Y-%m")
-        save_path = "/code/src"
+        save_path = "/code/src/static/heatmaps"
         os.makedirs(save_path, exist_ok=True)
 
         map_filename = os.path.join(save_path, f"crime_heatmap_{self.location}_{current_year_month}.html")
