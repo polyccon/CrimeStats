@@ -73,13 +73,27 @@ class CrimeDataProcessor:
         crime_list = []
         for crime in self.crime_data:
             location = crime.get("location", {})
-            crime_type = crime.get("category", "other-crime")  # Default category if missing
-            crime_list.append({
+            outcome_status = crime.get("outcome_status", {})
+            outcome = outcome_status.get("category", "Unknown") if outcome_status else None
+            date = outcome_status.get("date", "Unknown") if outcome_status else None
+            crime_info = {
                 "latitude": location.get("latitude"),
                 "longitude": location.get("longitude"),
-                "crime_type": crime_type,
-                "street_name": location.get("street", {}).get("name", "Unknown")
-            })
+                "crime_type": crime.get("category"),
+                "crime_date": date,
+                "crime_id": crime.get("id"),
+                "location_type": location.get("location_type"),
+                "outcome": outcome,
+                "street_name": location.get("street", {}).get("name"),
+            }
+
+            # Remove fields that are None or "Unknown"
+            filtered_crime_info = {k: v for k, v in crime_info.items() if v and v != "Unknown"}
+
+            # Ensure latitude and longitude exist before adding to the list
+            if "latitude" in filtered_crime_info and "longitude" in filtered_crime_info:
+                crime_list.append(filtered_crime_info)
+
 
         # Filter out missing locations
         crime_list = [c for c in crime_list if c["latitude"] and c["longitude"]]
@@ -93,10 +107,22 @@ class CrimeDataProcessor:
 
         # Add crime markers with color-coded icons
         for crime in crime_list:
-            crime_type = crime["crime_type"]
-            popup_info = f"<b>Crime:</b> {crime_type}<br><b>Location:</b> {crime['street_name']}"
+            crime_type = crime.get("crime_type")
+            crime_details = {
+                "Crime Type": crime_type,
+                "Crime Date": crime.get("crime_date"),
+                "Location": crime.get("street_name"),
+                "Location Type": crime.get("location_type"),
+                "Outcome": crime.get("outcome"),
+                "Crime ID": crime.get("crime_id"),
+            }
 
-            # Get color based on crime type, default to "gray" if not found
+            # Construct popup content dynamically
+            popup_info = "<b>Crime Details:</b><br>"
+            popup_info += "".join(
+                f"<b>{key}:</b> {value}<br>" for key, value in crime_details.items() if value
+            )
+
             icon_color = crime_colors.get(crime_type, "gray")
 
             folium.Marker(
