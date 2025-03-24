@@ -1,4 +1,3 @@
-import json
 import logging
 import requests
 
@@ -13,7 +12,7 @@ class PoliceClient:
         pass
 
     @staticmethod
-    def get_data_for_coordinates(self, latitude, longitude):
+    def get_data_for_coordinates(latitude, longitude):
         try:
             url = f"https://data.police.uk/api/crimes-street/all-crime?"
 
