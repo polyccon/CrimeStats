@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Crime Data Visualization</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis-label {
+            font-size: 12px;
+        }
+        .axis path, .axis line {
+            shape-rendering: crispEdges;
+            fill: none;
+            stroke: black;
+            stroke-width: 1;
+        }
+        .axis text {
+            font-size: 12px;
+        }
+    </style>
 </head>
-<body class="body">
-    <div id="header">
-        <h2> You are looking at crime stats for: </h2>
-            <p id="category" class="category_text">{{location}}<p>
+<body>
+    <h1>Crime Data Visualization</h1>
 
-    <div class="display-flex">
-        <div id="pie-chart"></div>
-        <div id="bar-chart"></div>
-    </div>
-    <div class="display-flex">
-        <div id="pie-chart-outcomes"></div>
-        <div id="bar-chart-outcomes"></div>
-    </div>
-            </div>
-    <form action="/">
-      <button type="submit" value="Home page" class="button-styling">Home page</button>
-    </form>
-</body>
-<script type="text/javascript" src="/static/results.js"></script>
+    <!-- Crime Category Bar Chart -->
+    <div id="category-bar-chart"></div>
+
+    <!-- Crime Outcome Bar Chart -->
+    <div id="outcome-bar-chart"></div>
 <script type="text/javascript">
-d3.json('/category_data/'+'{{location}}', function(error, data) {
-    drawPieChart('pie-chart', data);
-    drawBarChart('bar-chart', data);
-    document.getElementById("category").classList.remove("category_text");
-    })
-d3.json('/outcome_data/'+'{{location}}', function(error, data) {
-    drawPieChart('pie-chart-outcomes', data);
-    drawBarChart('bar-chart-outcomes', data);
-    })
+    const crimeLocation = "{{ location }}";  // Ensure it's injected correctly
 </script>
-
+<script type="text/javascript" src="{{ url_for('static', filename='results.js') }}"></script>
+</body>
 </html>

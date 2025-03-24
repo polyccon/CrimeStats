@@ -1,5 +1,5 @@
 import logging
-from flask import jsonify, request, abort, make_response, render_template, redirect, send_file
+from flask import jsonify, request, abort, make_response, render_template, redirect, send_file, url_for
 
 from src.core import app
 from src.data.convert_data import CrimeDataProcessor
@@ -37,16 +37,18 @@ def home():
     return redirect("/")
 
 
-@app.route("/category_data/<location>")
-def category_data(location):
+@app.route("/crime_data/<location>")
+def crime_data(location):
     processor = CrimeDataProcessor(location)
-    return jsonify(processor.get_crime_categories())
 
+    # Get both categories and outcomes
+    crime_categories = processor.get_crime_categories()  # List of {"label": category, "value": count}
+    crime_outcomes = processor.get_crime_outcomes()  # List of {"label": outcome, "value": count}
 
-@app.route("/outcome_data/<location>")
-def outcome_data(location):
-    processor = CrimeDataProcessor(location)
-    return jsonify(processor.get_crime_outcomes())
+    return jsonify({
+        "categories": crime_categories,
+        "outcomes": crime_outcomes
+    })
 
 
 @app.route("/viewcrime", methods=["GET", "POST"])
