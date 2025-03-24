@@ -1,5 +1,11 @@
 import json
+import logging
 import requests
+
+
+FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+LOGGER = logging.getLogger(__name__)
 
 
 class LocationClient:
@@ -8,8 +14,13 @@ class LocationClient:
 
     def postcode_to_coordinates(self):
         url = f"http://api.postcodes.io/postcodes/{self.location}"
-        resp_postcode = requests.get(url=url)
-        data = json.loads(resp_postcode.text)["result"]
-        latitude = data["latitude"]
-        longitude = data["longitude"]
-        return latitude, longitude
+        response = requests.get(url=url)
+        LOGGER.info(f"location client: {response.status_code}")
+        try:
+            data = response.json().get("result")
+            latitude = data["latitude"]
+            longitude = data["longitude"]
+            return latitude, longitude
+        except Exception as e:
+            LOGGER.error(f"police client: {str(e)}")
+            return {"error": f"police client: {str(e)}"}
